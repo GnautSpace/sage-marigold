@@ -16,13 +16,13 @@ git clone <your-repo-url>
 cd sage-marigold
 ```
 
-### 2. Frontend Setup (First Time Only)
+### 2. Frontend Setup
 If the frontend is not yet initialized, follow these steps:
 
 ```bash
 cd frontend
 npm install
-npm run dev    #Frontend will be running at http://localhost:5173
+npm run dev    # Frontend will be running at http://localhost:5173
 ```
 
 ### 3. Backend Setup
