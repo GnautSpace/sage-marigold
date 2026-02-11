@@ -4,6 +4,7 @@ Repository for Team Sage Marigold - Spring 2026 Cohort
 ## Tech Stack
 - **Frontend:** Vite + React (JavaScript + SWC)
 - **Backend:** Node.js / Express
+- **Database:** PostgreSQL 15 (via Docker)
 - **CI/CD:** GitHub Actions (Build Checks)
 
 ---
@@ -16,23 +17,43 @@ git clone <your-repo-url>
 cd sage-marigold
 ```
 
-### 2. Frontend Setup
-If the frontend is not yet initialized, follow these steps:
+### 2. Infrastructure (Docker & Database)
+We use Docker to ensure everyone has the same Database environment.
+- Requirements: Ensure Docker Desktop is running.
+- Configuration: Copy .env.example to .env in the root folder.
+- Launch: 
+```bash
+docker compose up -d
+```
+Verify Connection: Visit http://localhost:3000/test-db. You should see a success message.
 
+Note: The init.sql script automatically creates the users, tasks, and test_connection tables on the first run.
+
+### 3. Backend Setup
+```bash
+cd backend
+# 1. Copy environment variables
+cp .env.example .env
+# 2. Install dependencies
+npm install
+# 3. Start development server
+npm run dev
+```
+
+### 4. Frontend Setup
 ```bash
 cd frontend
 npm install
 npm run dev    # Frontend will be running at http://localhost:5173
 ```
 
-### 3. Backend Setup
+## Troubleshooting
+Database Tables missing? If you don't see the tables, your Docker volume might be outdated. 
 ```bash
-
-cd backend
-npm init -y
-# Install your dependencies (express, etc.)
-npm install
+docker compose down -v && docker compose up -d
 ```
+
+Connection Error? Double-check that your backend/.env file exists and matches the credentials in the root .env
 
 ## CI/CD Pipeline
 - We use a custom GitHub Action called sage-marigold CI Pipeline.
