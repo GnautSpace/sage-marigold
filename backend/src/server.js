@@ -5,7 +5,15 @@ const db = require('./config/db');
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://5173-firebase-sage-marigoldgit-1771583099257.cluster-bqwaigqtxbeautecnatk4o6ynk.cloudworkstations.dev',
+    'http://localhost:5173' // Add this for the proxy to work smoothly
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Routes
