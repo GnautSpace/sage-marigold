@@ -185,7 +185,7 @@ const Donate = () => {
       });
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/items`,
+        '/api/items',
         {
           method: "POST",
           headers: {

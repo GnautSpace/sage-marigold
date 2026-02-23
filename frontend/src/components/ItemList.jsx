@@ -26,7 +26,7 @@ const ItemList = () => {
         try {
           // Use your Codespace URL
           const response = await fetch(
-            `${import.meta.env.VITE_API_URL}/api/items/available`,
+            '/api/items/available',
           );
 
           if (response.ok) {

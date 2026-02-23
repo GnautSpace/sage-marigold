@@ -46,4 +46,3 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_pending_request ON requests (item_i
 -- Prevents a user from having multiple 'pending' requests for the same item at once, 
 -- while still allowing them to re-apply if a previous request was 'cancelled' or 'rejected'
 CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_pending_request ON requests (item_id, requester_id) WHERE status = 'pending';
->>>>>>> 0dbc33c (fix: implement partial unique index for pending requests and manual timestamp updates in controller)
