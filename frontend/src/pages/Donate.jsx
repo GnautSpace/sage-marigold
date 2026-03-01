@@ -4,6 +4,7 @@ import LocationAutocomplete from "../components/LocationAutoComplete.jsx";
 
 const Donate = () => {
   const [images, setImages] = useState([]);
+  const [resetKey, setResetKey] = useState(0);
   const fileInputRef = useRef(null);
   const maxImages = 5;
 
@@ -21,7 +22,6 @@ const Donate = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [resetKey, setResetKey] = useState(0);
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -153,10 +153,8 @@ const Donate = () => {
       longitude: null,
     });
     setResetKey(prev => prev + 1);
-
     images.forEach((image) => URL.revokeObjectURL(image.preview));
     setImages([]);
-
     setErrors({});
   };
 
@@ -178,7 +176,6 @@ const Donate = () => {
       submitData.append("category", formData.category);
       submitData.append("condition", formData.condition);
       submitData.append("location", formData.location);
-
       submitData.append("pickup_instructions", formData.pickupInstructions);
 
       images.forEach((imgObj) => {
@@ -504,6 +501,16 @@ const Donate = () => {
               Pickup Location *
             </label>
             <LocationAutocomplete key={resetKey} onLocationSelect={handleLocationSelect} />
+            <input
+              id="location"
+              type="text"
+              value={formData.location}
+              onChange={handleInputChange}
+              placeholder="E.g nearest landmarks or streets"
+              className={`w-full cursor-pointer px-3 py-2 rounded-md border bg-[#f3f3f5] text-sm outline-none transition-all focus:ring-2 focus:ring-emerald-500 ${
+                errors.location ? "border-red-500" : "border-transparent"
+              }`}
+            />
             <p className="text-xs text-gray-500">
               General area only. Exact address shared after confirmation.
             </p>

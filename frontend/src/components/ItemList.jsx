@@ -6,11 +6,14 @@ import { mockDonations } from "../data/mockDonations";
 import ItemCard from "./ItemCard";
 import { FiAlertTriangle } from "react-icons/fi";
 import { FaBoxOpen } from "react-icons/fa";
+import { MdMyLocation, MdLocationOn, MdRefresh } from "react-icons/md";
 
 const ItemList = () => {
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userCoords, setUserCoords] = useState(null);
+  const [isGeoLoading, setIsGeoLoading] = useState(false);
   const [filters, setFilters] = useState({
     category: "",
     condition: "",
@@ -51,49 +54,32 @@ const ItemList = () => {
           allDonations = mockDonations;
         }
 
-        let filtered = [...allDonations];
 
-        if (filters.category) {
-          filtered = filtered.filter(
-            (item) => item.category === filters.category,
-          );
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/items/available?${params.toString()}`,
+        );
+        const data = await response.json();
+
+        if (data.ok) {
+          setDonations(data.items);
         }
-
-        if (filters.condition) {
-          filtered = filtered.filter(
-            (item) => item.condition === filters.condition,
-          );
+        else {
+          console.error("Backend error, no items found");
+          setError(data.msg);
+          setDonations([]);
         }
-
-        if (filters.location) {
-          filtered = filtered.filter((item) =>
-            item.location
-              ?.toLowerCase()
-              .includes(filters.location.toLowerCase()),
-          );
-        }
-
-        if (filters.search) {
-          const searchLower = filters.search.toLowerCase();
-          filtered = filtered.filter(
-            (item) =>
-              item.title?.toLowerCase().includes(searchLower) ||
-              item.description?.toLowerCase().includes(searchLower),
-          );
-        }
-
-        setDonations(filtered);
-        setError(null);
-      } catch (err) {
-        console.error("Error processing donations:", err);
+      }
+      catch (err) {
+        console.error("Fetch error:", err);
         setError(err);
-      } finally {
+        setDonations([]);
+      }
+      finally {
         setLoading(false);
       }
     };
-
     fetchDonations();
-  }, [filters]);
+  }, [filters, userCoords]);
 
   if (error) {
     return (
@@ -121,7 +107,48 @@ const ItemList = () => {
 
   return (
     <>
-      <Filter filters={filters} setFilters={setFilters} />
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+        <Filter filters={filters} setFilters={setFilters} />
+        <div
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all cursor-pointer ${userCoords
+            ? "bg-emerald-100 text-emerald-700 border border-emerald-300"
+            : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+            }`}
+          onClick={!userCoords ? handleNearMeClick : undefined}
+        >
+          <div className="flex items-center gap-2">
+            {isGeoLoading ? (
+              <MdRefresh className="animate-spin text-emerald-500 text-lg" />
+            ) : userCoords ? (
+              <MdLocationOn className="text-emerald-600 text-lg" />
+            ) : (
+              <MdMyLocation className="text-emerald-500 text-lg" />
+            )}
+
+            <span className={isGeoLoading ? "animate-pulse" : ""}>
+              {isGeoLoading
+                ? "Searching..."
+                : userCoords
+                  ? "Location Active"
+                  : "Find Near Me"}
+            </span>
+          </div>
+
+          {userCoords && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation(); 
+                setUserCoords(null);
+              }}
+              className="ml-2 bg-emerald-200 hover:bg-emerald-300 text-emerald-800 rounded-full w-5 h-5 flex items-center justify-center text-xs transition-colors"
+              title="Clear location"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      </div>
 
       {!loading && donations.length === 0 ? (
         <div className="text-center py-16 px-4">
@@ -150,8 +177,8 @@ const ItemList = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
           {loading
             ? Array.from({ length: 6 }).map((_, index) => (
-                <SkeletonCard key={index} />
-              ))
+              <SkeletonCard key={index} />
+            ))
             : donations.map((donation) => (
                 <ItemCard key={donation.id} {...donation} onRequest={handleRequest} />
               ))}
