@@ -4,10 +4,13 @@ import { FaBoxOpen, FaClock } from "react-icons/fa";
 import { IoCheckmarkDoneCircle } from "react-icons/io5";
 import { FaRecycle } from "react-icons/fa";
 import { IoShieldCheckmarkOutline } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 const Step = ({ number, text, color = "bg-emerald-500" }) => (
   <div className="flex items-start gap-4">
-    <div className={`w-8 h-8 flex items-center justify-center rounded-full ${color} text-white text-sm font-semibold`}>
+    <div
+      className={`w-8 h-8 flex items-center justify-center rounded-full ${color} text-white text-sm font-semibold`}
+    >
       {number}
     </div>
     <p className="text-gray-600">{text}</p>
@@ -15,19 +18,36 @@ const Step = ({ number, text, color = "bg-emerald-500" }) => (
 );
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  // Checks if the user is logged in by looking for a token in localStorage.
+  // If a token exists, they go to the intended page.
+  // If not, they get redirected to /signup to log in or create an account first.
+  const handleNav = (destination) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate(destination);
+    } else {
+      navigate("/signup");
+    }
+  };
+
   return (
-    <section className="mx-auto text-center pt-8 px-4">
+    <div>
       <Hero />
+
+      <section className="mx-auto text-center pt-8 px-4">
+        {/* ── How to Donate ── */}
+
+
+        {/* ── How It Works ── */}
         <div className="max-w-6xl mx-auto text-center mb-12 pt-20 px-8">
-          <h2 className="text-4xl font-bold text-gray-900">
-            How It Works
-          </h2>
+          <h2 className="text-4xl font-bold text-gray-900">How It Works</h2>
           <div className="w-16 h-1 bg-emerald-500 mx-auto mt-3 rounded-full"></div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-6xl mx-auto">
-
-          {/* DONORS CARD */}
+          {/* Donors Card */}
           <div className="bg-white rounded-2xl shadow-sm p-10 text-left flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-4 mb-8">
@@ -36,20 +56,22 @@ const Home = () => {
                 </div>
                 <h3 className="text-2xl font-semibold">For Donors</h3>
               </div>
-
               <div className="space-y-6">
                 <Step number="1" text="Snap a photo of your item and add a brief description." />
                 <Step number="2" text="Choose a pickup location or safe meetup spot." />
                 <Step number="3" text="Get notified when someone needs your item." />
               </div>
             </div>
-
-            <button className="mt-10 bg-emerald-500 hover:bg-emerald-600 transition text-white font-semibold py-4 rounded-xl w-full">
+            {/* Logged-in users go to /donate. Guests are sent to /signup first. */}
+            <button
+              onClick={() => handleNav("/donate")}
+              className="mt-10 bg-emerald-500 hover:bg-emerald-600 transition text-white font-semibold py-4 rounded-xl w-full"
+            >
               Start Donating
             </button>
           </div>
 
-          {/* RECIPIENTS CARD */}
+          {/* Recipients Card */}
           <div className="bg-white rounded-2xl shadow-sm p-10 text-left flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-4 mb-8">
@@ -58,29 +80,30 @@ const Home = () => {
                 </div>
                 <h3 className="text-2xl font-semibold">For Recipients</h3>
               </div>
-
               <div className="space-y-6">
                 <Step number="1" text="Browse available items in your local community." color="bg-gray-800" />
                 <Step number="2" text="Request the item you need and wait for approval." color="bg-gray-800" />
                 <Step number="3" text="Coordinate the pickup directly with the donor." color="bg-gray-800" />
               </div>
             </div>
-
-            <button className="mt-10 bg-gray-800 hover:bg-gray-900 transition text-white font-semibold py-4 rounded-xl w-full">
+            {/* Logged-in users go to /explore. Guests are sent to /signup first. */}
+            <button
+              onClick={() => handleNav("/explore")}
+              className="mt-10 bg-gray-800 hover:bg-gray-900 transition text-white font-semibold py-4 rounded-xl w-full"
+            >
               Find Items
             </button>
           </div>
         </div>
+
+        {/* ── Why Helping Hands? ── */}
         <div className="max-w-6xl mx-auto text-center pt-20 px-8 mb-30">
-          <h2 className="text-4xl font-bold text-gray-900">
-            Why Helping Hands?
-          </h2>
+          <h2 className="text-4xl font-bold text-gray-900">Why Helping Hands?</h2>
           <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
             We believe in a circular economy where every resource is valued and every
             neighbor is supported.
           </p>
 
-          {/* Features */}
           <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-12">
             <div className="flex flex-col items-center text-center">
               <div className="w-16 h-16 bg-white rounded-2xl shadow-md flex items-center justify-center mb-6">
@@ -112,6 +135,7 @@ const Home = () => {
           </div>
         </div>
       </section>
+    </div>
   );
 };
 

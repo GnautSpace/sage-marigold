@@ -1,5 +1,29 @@
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
+  const navigate = useNavigate();
+
+  // Checks if the user is logged in before navigating to protected routes.
+  // If no token is found, guests are redirected to /signup first.
+  const handleNav = (destination) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate(destination);
+    } else {
+      navigate("/signup");
+    }
+  };
+
+  // Scrolls smoothly to the "How It Works" section on the Home page.
+  // If the user is not already on the Home page, it navigates there first.
+  const handleHowItWorks = () => {
+    navigate("/");
+    setTimeout(() => {
+      const section = document.getElementById("how-it-works");
+      if (section) section.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  };
+
   return (
     <footer className="bg-emerald-900 text-emerald-50">
       <div className="max-w-6xl mx-auto px-6 py-16">
@@ -19,13 +43,24 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-white mb-4">Quick Links</h4>
             <ul className="space-y-3 text-emerald-200">
-              <li className="hover:text-white transition cursor-pointer">
+              <li
+                onClick={handleHowItWorks}
+                className="hover:text-white transition cursor-pointer"
+              >
                 How It Works
               </li>
-              <li className="hover:text-white transition cursor-pointer">
+              {/* Guests are redirected to /signup before reaching /explore */}
+              <li
+                onClick={() => handleNav("/explore")}
+                className="hover:text-white transition cursor-pointer"
+              >
                 Browse Items
               </li>
-              <li className="hover:text-white transition cursor-pointer">
+              {/* Guests are redirected to /signup before reaching /donate */}
+              <li
+                onClick={() => handleNav("/donate")}
+                className="hover:text-white transition cursor-pointer"
+              >
                 List an Item
               </li>
             </ul>
