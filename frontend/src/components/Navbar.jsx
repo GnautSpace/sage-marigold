@@ -27,13 +27,11 @@ const Navbar = () => {
           className="flex items-center text-emerald-700 text-xl font-cursive! hover:text-gray-600"
           to="/"
         >
-          {/* Logo image is always visible on all screen sizes */}
           <img
             src="/project_logo.png"
             alt="Sage Marigold Logo"
             className="h-12 w-12 mr-2"
           />
-          {/* Text is hidden on mobile, visible on md and above */}
           <span className="hidden md:inline">HELPING HANDS</span>
         </Link>
       </h1>

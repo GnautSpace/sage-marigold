@@ -20,9 +20,7 @@ const Step = ({ number, text, color = "bg-emerald-500" }) => (
 const Home = () => {
   const navigate = useNavigate();
 
-  // Checks if the user is logged in by looking for a token in localStorage.
-  // If a token exists, they go to the intended page.
-  // If not, they get redirected to /signup to log in or create an account first.
+
   const handleNav = (destination) => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -37,8 +35,6 @@ const Home = () => {
       <Hero />
 
       <section className="mx-auto text-center pt-8 px-4">
-        {/* ── How to Donate ── */}
-
 
         {/* ── How It Works ── */}
         <div className="max-w-6xl mx-auto text-center mb-12 pt-20 px-8">
@@ -62,7 +58,6 @@ const Home = () => {
                 <Step number="3" text="Get notified when someone needs your item." />
               </div>
             </div>
-            {/* Logged-in users go to /donate. Guests are sent to /signup first. */}
             <button
               onClick={() => handleNav("/donate")}
               className="mt-10 bg-emerald-500 hover:bg-emerald-600 transition text-white font-semibold py-4 rounded-xl w-full"
@@ -86,7 +81,6 @@ const Home = () => {
                 <Step number="3" text="Coordinate the pickup directly with the donor." color="bg-gray-800" />
               </div>
             </div>
-            {/* Logged-in users go to /explore. Guests are sent to /signup first. */}
             <button
               onClick={() => handleNav("/explore")}
               className="mt-10 bg-gray-800 hover:bg-gray-900 transition text-white font-semibold py-4 rounded-xl w-full"
