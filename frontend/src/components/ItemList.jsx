@@ -155,7 +155,6 @@ const ItemList = () => {
       </div>
 
       {!loading && donations.length === 0 ? (
-        // Empty state when no results
         <div className="text-center py-16 px-4">
           <FaBoxOpen className="mx-auto text-6xl text-gray-300 mb-4" />
           <h3 className="text-xl font-semibold text-gray-700 mb-2">
